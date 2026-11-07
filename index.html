@@ -63,6 +63,11 @@ p{margin:0}a{color:inherit;text-decoration:none}
   text-transform:uppercase;color:var(--faint);border:1px solid var(--grid);border-radius:999px;padding:.15rem .6rem}
 .badge.live{color:var(--up);border-color:rgba(52,211,153,.4)}
 .cardlink{cursor:pointer}
+.row-sep{grid-column:1/-1;display:flex;align-items:center;gap:1rem;margin:.9rem 0 .1rem}
+.row-sep::before,.row-sep::after{content:"";height:1px;background:var(--grid);flex:1}
+.row-sep span{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.card.base{border-color:var(--grid-2);background:linear-gradient(180deg,var(--panel-2),var(--panel))}
+.card.base .cn .op{color:var(--signal-hi)}
 .note .wrap{padding-block:clamp(2rem,5vw,3rem);display:grid;grid-template-columns:.9fr 1.1fr;gap:2.4rem;align-items:center}
 @media(max-width:780px){.note .wrap{grid-template-columns:1fr;gap:1.2rem}}
 .note h2{font-size:clamp(1.5rem,3.4vw,2.1rem);max-width:18ch}
@@ -93,7 +98,7 @@ footer .mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-t
   <nav class="apps" aria-label="Ecosistema">
     <a href="https://segundaopinion.cl" title="SegundaOpinión — matriz">SegundaOpinión</a>
     <a href="https://xva.cl" title="XVA — valoración de cartera">XVA</a>
-    <span class="here">Suite TradeAI</span>
+    <span class="here">Suite Trade AI</span>
   </nav>
 </div></header>
 
@@ -108,12 +113,12 @@ footer .mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-t
   <p class="eyebrow">Los módulos</p>
   <div class="grid">
 
-    <a class="card live cardlink" href="https://tradevol.cl">
-      <span class="badge live">live</span>
-      <span class="cn">Trade<span class="op">Vol</span></span>
-      <span class="cr">Opciones y volatilidad</span>
-      <span class="cd">Terminal de opciones FX: pricing, superficies de volatilidad, griegas y escenarios.</span>
-      <span class="go">Abrir TradeVol →</span>
+    <a class="card cardlink" href="https://tradefx.cl">
+      <span class="badge">pronto</span>
+      <span class="cn">Trade<span class="op">FX</span></span>
+      <span class="cr">Plataforma RFQ</span>
+      <span class="cd">Request-for-quote FX: solicitud de cotizaciones, comparación y captura de operaciones.</span>
+      <span class="go">Ver TradeFX →</span>
     </a>
 
     <a class="card cardlink" href="https://tradeswap.cl">
@@ -124,12 +129,12 @@ footer .mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-t
       <span class="go">Ver TradeSwap →</span>
     </a>
 
-    <a class="card cardlink" href="https://tradefx.cl">
-      <span class="badge">pronto</span>
-      <span class="cn">Trade<span class="op">FX</span></span>
-      <span class="cr">Plataforma RFQ</span>
-      <span class="cd">Request-for-quote FX: solicitud de cotizaciones, comparación y captura de operaciones.</span>
-      <span class="go">Ver TradeFX →</span>
+    <a class="card live cardlink" href="https://tradevol.cl">
+      <span class="badge live">live</span>
+      <span class="cn">Trade<span class="op">Vol</span></span>
+      <span class="cr">Opciones y volatilidad</span>
+      <span class="cd">Terminal de opciones FX: pricing, superficies de volatilidad, griegas y escenarios.</span>
+      <span class="go">Abrir TradeVol →</span>
     </a>
 
     <a class="card cardlink" href="https://tradeblotter.cl">
@@ -138,6 +143,16 @@ footer .mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-t
       <span class="cr">Blotter de la suite</span>
       <span class="cd">El contenedor que consolida posiciones, operaciones y P&amp;L de toda la familia Trade.</span>
       <span class="go">Ver TradeBlotter →</span>
+    </a>
+
+    <div class="row-sep"><span>Base de valoración</span></div>
+
+    <a class="card base cardlink" href="https://xva.cl">
+      <span class="badge">pronto</span>
+      <span class="cn"><span class="op">XVA</span></span>
+      <span class="cr">Valoración y riesgo de contraparte</span>
+      <span class="cd">Motor cuantitativo: CVA · DVA · FVA · MVA · KVA, Wrong-Way Risk y estrategias de cobertura. 100% en navegador, base NIIF 13.</span>
+      <span class="go">Abrir XVA →</span>
     </a>
 
   </div>
