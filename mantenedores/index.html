@@ -106,6 +106,8 @@ var clientes = ls("tai.clientes", null) || seedClientes();
 var perfiles = ls("tai.perfiles", null) || seedPerfiles();
 var usuarios = ls("tai.usuarios", null) || seedUsuarios(perfiles);
 save("tai.clientes",clientes);save("tai.perfiles",perfiles);save("tai.usuarios",usuarios);
+var editC=null, editU=null;
+function val(id){var e=document.getElementById(id);return e?(e.value||"").trim():"";}
 
 // ---------- router ----------
 var TABS=[["clientes","Clientes"],["usuarios","Usuarios"],["perfiles","Perfiles"],["permisos","Permisos"]];
@@ -117,7 +119,9 @@ function opt(list,sel){return list.map(function(v){return '<option'+(v===sel?" s
 
 // ---------- Clientes ----------
 function renderClientes(){
-  var rows=clientes.map(function(c){return '<tr><td>'+esc(c.nombre)+'</td><td class="dim">'+esc(c.tipo)+'</td><td class="mono dim">'+esc(c.rut)+'</td><td><span class="chip ok">'+esc(c.estado)+'</span></td><td style="text-align:right"><button class="btn x" onclick="delCliente(\''+c.id+'\')">✕</button></td></tr>';}).join("");
+  var rows=clientes.map(function(c){
+    if(c.id===editC){return '<tr><td><input id="ec_nom" value="'+esc(c.nombre)+'"></td><td><select id="ec_tipo">'+opt(TIPOS,c.tipo)+'</select></td><td><input id="ec_rut" value="'+esc(c.rut)+'"></td><td><select id="ec_est"><option'+(c.estado==="Activo"?" selected":"")+'>Activo</option><option'+(c.estado==="Inactivo"?" selected":"")+'>Inactivo</option></select></td><td style="text-align:right;white-space:nowrap"><button class="btn primary" onclick="saveCliente(\''+c.id+'\')">Guardar</button> <button class="btn" onclick="editC=null;render()">✕</button></td></tr>';}
+    return '<tr><td>'+esc(c.nombre)+'</td><td class="dim">'+esc(c.tipo)+'</td><td class="mono dim">'+esc(c.rut)+'</td><td><span class="chip '+(c.estado==="Activo"?"ok":"")+'">'+esc(c.estado)+'</span></td><td style="text-align:right;white-space:nowrap"><button class="btn" onclick="editC=\''+c.id+'\';render()">Editar</button> <button class="btn x" onclick="delCliente(\''+c.id+'\')">✕</button></td></tr>';}).join("");
   return '<div class="panel"><div class="ph"><h2>Clientes</h2><span class="sp"></span><span class="hint">'+clientes.length+' · base única de la suite</span></div><div class="pb">'
     +'<div class="scroll"><table><thead><tr><th>Nombre</th><th>Tipo</th><th>RUT</th><th>Estado</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'
     +'<div class="row"><label><span class="l">Nombre</span><input id="c_nom" placeholder="Exportadora Tres SPA"></label>'
@@ -135,11 +139,18 @@ function addCliente(){
   save("tai.clientes",clientes);render();
 }
 function delCliente(id){clientes=clientes.filter(function(c){return c.id!==id;});save("tai.clientes",clientes);render();}
+function saveCliente(id){var c=clientes.find(function(x){return x.id===id;});if(!c)return;var nom=val("ec_nom");if(!nom)return;
+  if(clientes.some(function(o){return o.id!==id&&o.nombre.toLowerCase()===nom.toLowerCase();})){alert("Ya existe otro cliente con ese nombre.");return;}
+  c.nombre=nom;c.tipo=document.getElementById("ec_tipo").value;c.rut=val("ec_rut")||"—";c.estado=document.getElementById("ec_est").value;
+  save("tai.clientes",clientes);editC=null;render();}
 
 // ---------- Usuarios ----------
 function renderUsuarios(){
   var pname={};perfiles.forEach(function(p){pname[p.id]=p.nombre;});
-  var rows=usuarios.map(function(u){return '<tr><td>'+esc(u.nombre)+'</td><td class="mono dim">'+esc(u.email)+'</td><td><span class="chip A">'+esc(pname[u.perfilId]||"—")+'</span></td><td><span class="chip ok">'+esc(u.estado)+'</span></td><td style="text-align:right"><button class="btn x" onclick="delUsuario(\''+u.id+'\')">✕</button></td></tr>';}).join("");
+  var pOpts=function(sel){return perfiles.map(function(p){return '<option value="'+p.id+'"'+(p.id===sel?" selected":"")+'>'+esc(p.nombre)+'</option>';}).join("");};
+  var rows=usuarios.map(function(u){
+    if(u.id===editU){return '<tr><td><input id="eu_nom" value="'+esc(u.nombre)+'"></td><td><input id="eu_mail" value="'+esc(u.email)+'"></td><td><select id="eu_perf">'+pOpts(u.perfilId)+'</select></td><td><select id="eu_est"><option'+(u.estado==="Activo"?" selected":"")+'>Activo</option><option'+(u.estado==="Inactivo"?" selected":"")+'>Inactivo</option></select></td><td style="text-align:right;white-space:nowrap"><button class="btn primary" onclick="saveUsuario(\''+u.id+'\')">Guardar</button> <button class="btn" onclick="editU=null;render()">✕</button></td></tr>';}
+    return '<tr><td>'+esc(u.nombre)+'</td><td class="mono dim">'+esc(u.email)+'</td><td><span class="chip A">'+esc(pname[u.perfilId]||"—")+'</span></td><td><span class="chip '+(u.estado==="Activo"?"ok":"")+'">'+esc(u.estado)+'</span></td><td style="text-align:right;white-space:nowrap"><button class="btn" onclick="editU=\''+u.id+'\';render()">Editar</button> <button class="btn x" onclick="delUsuario(\''+u.id+'\')">✕</button></td></tr>';}).join("");
   var perfOpts=perfiles.map(function(p){return '<option value="'+p.id+'">'+esc(p.nombre)+'</option>';}).join("");
   return '<div class="panel"><div class="ph"><h2>Usuarios del sistema</h2><span class="sp"></span><span class="hint">no son clientes · cada uno con 1 perfil</span></div><div class="pb">'
     +'<div class="scroll"><table><thead><tr><th>Nombre</th><th>Email</th><th>Perfil</th><th>Estado</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'
@@ -158,6 +169,9 @@ function addUsuario(){
   save("tai.usuarios",usuarios);render();
 }
 function delUsuario(id){usuarios=usuarios.filter(function(u){return u.id!==id;});save("tai.usuarios",usuarios);render();}
+function saveUsuario(id){var u=usuarios.find(function(x){return x.id===id;});if(!u)return;var nom=val("eu_nom");if(!nom)return;
+  u.nombre=nom;u.email=val("eu_mail")||"—";u.perfilId=document.getElementById("eu_perf").value;u.estado=document.getElementById("eu_est").value;
+  save("tai.usuarios",usuarios);editU=null;render();}
 
 // ---------- Perfiles ----------
 function renderPerfiles(){
