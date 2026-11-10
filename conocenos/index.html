@@ -98,10 +98,10 @@ svg text{font-family:var(--mono)}
   <!-- 2 THESIS -->
   <section class="slide">
     <div class="eyebrow">El problema</div>
-    <h2>Operar sin reventar la corredora.</h2>
+    <h2>Operar con el capital siempre bajo control.</h2>
     <p class="sub">Una mesa boutique vive entre tres miedos: <b class="warn">pasarse del capital regulatorio</b> y quedar fuera de mercado, <b class="warn">una multa de la CMF</b> por ofrecer productos complejos sin respaldo, y <b class="warn">dejar cabos sueltos</b> en contabilidad o compliance.</p>
     <div class="grid c3" style="margin-top:22px">
-      <div class="card"><div class="cn">Capital <span class="op">CMF</span></div><div class="cd">Cada ticket sabe si cabe. Hard-stop antes de reventar la CDB.</div></div>
+      <div class="card"><div class="cn">Capital <span class="op">CMF</span></div><div class="cd">Cada ticket sabe si cabe. Avisa y frena antes de pasar el límite.</div></div>
       <div class="card"><div class="cn">Compliance</div><div class="cd">Trazabilidad e idoneidad de cada cierre. Nada queda sin registro.</div></div>
       <div class="card"><div class="cn">Contabilidad</div><div class="cd">Ristras que cuadran, listas para el ERP. No se duplica ni falta nada.</div></div>
     </div>
@@ -170,8 +170,8 @@ svg text{font-family:var(--mono)}
 
   <!-- 6 CMF HARD STOP -->
   <section class="slide">
-    <div class="eyebrow">RequerCapital · el candado</div>
-    <h2>Nunca revientes la corredora.</h2>
+    <div class="eyebrow">RequerCapital · el control</div>
+    <h2>El capital, siempre bajo control.</h2>
     <div class="grid c2" style="margin-top:14px;align-items:center">
       <div>
         <svg viewBox="0 0 420 150" width="100%" height="auto" aria-label="Semáforo de consumo de capital">
@@ -181,12 +181,12 @@ svg text{font-family:var(--mono)}
           <rect x="248" y="60" width="76" height="20" fill="var(--down)" opacity=".9"/>
           <rect x="324" y="60" width="76" height="20" rx="0" fill="var(--black)"/>
           <line x1="324" y1="52" x2="324" y2="88" stroke="var(--signal-hi)" stroke-width="2"/>
-          <text x="324" y="46" font-size="9" fill="var(--signal-hi)" text-anchor="middle">hard-stop 80%</text>
+          <text x="324" y="46" font-size="9" fill="var(--signal-hi)" text-anchor="middle">freno 80%</text>
           <text x="20" y="104" font-size="9" fill="var(--up)">Verde &lt;20%</text>
           <text x="150" y="104" font-size="9" fill="var(--warn)">Amarillo</text>
           <text x="255" y="104" font-size="9" fill="var(--down)">Rojo</text>
-          <text x="332" y="104" font-size="9" fill="#fff">Bloqueo</text>
-          <text x="20" y="130" font-size="10" fill="var(--dim)">CDB 111% → ticket verde para Coto, igual BLOQUEADO</text>
+          <text x="332" y="104" font-size="9" fill="#fff">Freno</text>
+          <text x="20" y="130" font-size="10" fill="var(--dim)">CDB cerca del límite → el sistema frena el ticket a tiempo</text>
         </svg>
       </div>
       <div>
@@ -194,8 +194,8 @@ svg text{font-family:var(--mono)}
           <li>Doble pozo: <b>CDB (corredora)</b> y <b>Coto (broker)</b>.</li>
           <li>Requerimiento <b>CMF NCG 562</b> = 3%×APR + add-on.</li>
           <li>Un ticket solo cierra si cabe en <b>los dos</b>.</li>
-          <li>Si <b>mata la CDB</b> → bloqueo, aunque tu línea esté verde.</li>
-          <li>Te dice <b>en cuánto reventás</b>, antes de operar.</li>
+          <li>Si una operación supera el límite, <b>el sistema frena a tiempo</b>.</li>
+          <li>Muestra el <b>margen disponible</b> antes de operar — sin sorpresas.</li>
         </ul>
       </div>
     </div>
@@ -263,47 +263,42 @@ svg text{font-family:var(--mono)}
     </div>
   </section>
 
-  <!-- 9 QUIEN SOY -->
+  <!-- 9 PARA QUIEN -->
   <section class="slide">
-    <div class="eyebrow">Quién soy</div>
-    <h2>Broker de mercado. Clientes, operación y comisión.</h2>
-    <p class="sub">Llego con oficio y cartera: enrolo clientes nuevos, opero en nombre de la corredora y comisiono por el negocio cerrado.</p>
+    <div class="eyebrow">Para quién es</div>
+    <h2>Una mesa completa, en una plataforma.</h2>
     <div class="grid c3" style="margin-top:20px">
-      <div class="card"><div class="tag">Enrolo</div><div class="cd sm" style="color:var(--text)">Traigo clientes nuevos y los sumo al pipeline de la mesa.</div></div>
-      <div class="card"><div class="tag">Opero</div><div class="cd sm" style="color:var(--text)">Vendo y bloteo en nombre de la corredora, con los productos aprobados.</div></div>
-      <div class="card"><div class="tag">Comisiono</div><div class="cd sm" style="color:var(--text)">Mi incentivo es el negocio cerrado — alineado con el de ustedes.</div></div>
+      <div class="card"><div class="cn">Corredoras</div><div class="cd sm" style="color:var(--text)">Operar derivados con control de capital CMF y todo trazable.</div></div>
+      <div class="card"><div class="cn">AGFs &amp; fondos</div><div class="cd sm" style="color:var(--text)">Cobertura cambiaria y de tasa, con idoneidad y contabilidad al día.</div></div>
+      <div class="card"><div class="cn">Mesas &amp; traders</div><div class="cd sm" style="color:var(--text)">Pricing, blotter y P&amp;L en un solo lugar, del deal al back office.</div></div>
     </div>
-    <p class="note" style="margin-top:20px">La diferencia: no trabajo con planillas sueltas. Trabajo con <b class="acc">TradeAI</b>.</p>
+    <p class="note" style="margin-top:20px">Live hoy en <b class="acc">tradefx · traderf · tradevol · tradeblotter · xva</b>. 100% en el navegador.</p>
   </section>
 
-  <!-- 10 MI FORMA -->
-  <section class="slide">
-    <div class="eyebrow">Mi forma de trabajar</div>
-    <h2>Pipeline ordenado, corredora protegida.</h2>
-    <div class="grid c2" style="margin-top:16px">
-      <div class="card"><div class="cn">Más negocio</div><ul class="pts sm" style="margin-top:8px">
-        <li><b>Pipeline de enrolamiento</b> optimizado: no se pierden deals.</li>
-        <li>Captura ordenada de cada operación — nada queda en un papel suelto.</li>
-      </ul></div>
-      <div class="card"><div class="cn">Menos riesgo para ustedes</div><ul class="pts sm" style="margin-top:8px">
-        <li><b>Cero operaciones perdidas</b> en contabilidad.</li>
-        <li><b>Compliance al día</b> con la CMF (idoneidad registrada).</li>
-        <li><b>Nunca reviento el capital</b> de la corredora.</li>
-      </ul></div>
-    </div>
-    <p class="lede" style="margin-top:20px">Me apoyo en mi herramienta para <b class="acc">vender más</b> y, a la vez, <b class="acc">dejarlos protegidos</b>.</p>
-  </section>
-
-  <!-- 11 CLOSE / VALOR -->
+  <!-- 10 QUE GANAS -->
   <section class="slide">
     <div class="eyebrow">Qué ganan</div>
-    <h2>Un broker que suma. Una herramienta que empuja a toda la mesa.</h2>
+    <h2>Más negocio, menos riesgo.</h2>
     <div class="grid c2" style="margin-top:16px">
-      <div class="card"><div class="tag">Me suman a mí</div><div class="cd sm" style="color:var(--text)">Uso TradeAI como mi control y registro: ordenado, sin perder deals, y ustedes operan tranquilos.</div></div>
-      <div class="card" style="border-color:var(--signal-deep)"><div class="tag">Un push para la oficina</div><div class="cd sm" style="color:var(--text)">La herramienta puede optimizar a toda la corredora: más negocio y más seguridad normativa, contable y de gestión, para todos.</div></div>
+      <div class="card"><div class="cn">Más negocio</div><ul class="pts sm" style="margin-top:8px">
+        <li>Abre <b>productos nuevos</b>: opciones y estrategias con opciones.</li>
+        <li>Pipeline ordenado: <b>no se pierden deals</b>.</li>
+      </ul></div>
+      <div class="card"><div class="cn">Menos riesgo</div><ul class="pts sm" style="margin-top:8px">
+        <li><b>Capital bajo control</b> (CMF NCG 562), a tiempo.</li>
+        <li><b>Compliance</b> con idoneidad registrada.</li>
+        <li><b>Contabilidad</b> que cuadra, lista para el ERP.</li>
+      </ul></div>
     </div>
-    <h1 style="font-size:clamp(1.8rem,5vw,2.8rem);margin-top:22px">Hagamos negocio juntos — <span class="acc">seguros</span>.</h1>
-    <div class="foot" style="margin-top:16px">TradeAI · by SegundaOpinión · coto.fintech@gmail.com<br>tradeblotter.cl · tradefx.cl · traderf.cl · tradevol.cl · xva.cl</div>
+    <p class="lede" style="margin-top:20px">Todo integrado: <b class="acc">del deal al back office</b>, sobre una misma base.</p>
+  </section>
+
+  <!-- 11 CLOSE PRODUCTO -->
+  <section class="slide">
+    <div class="eyebrow">Hablemos</div>
+    <h1 style="font-size:clamp(2rem,6vw,3.2rem);margin-top:10px">Ya está viva.<br>Solo falta <span class="acc">ponerla a trabajar.</span></h1>
+    <p class="lede" style="margin-top:16px">TradeAI opera hoy. La vemos en vivo, la conectamos a su mesa y empezamos.</p>
+    <div class="foot" style="margin-top:22px">TradeAI · by SegundaOpinión · coto.fintech@gmail.com<br>tradeblotter.cl · tradefx.cl · traderf.cl · tradevol.cl · xva.cl</div>
   </section>
 
 </div>
