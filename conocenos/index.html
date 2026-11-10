@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TradeAI Suite</title>
+<meta name="description" content="Deck de presentación de la Suite TradeAI: módulos, foco en Opciones y TradeBlotter (CMF, Blotter, Conta, Audit), y la propuesta de servicio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --signal:#2fd9e8;--signal-hi:#8ceff6;--signal-deep:#1f9dac;
+  --bg:#0a0e14;--p1:#0e141d;--p2:#121a24;--p3:#16202c;--inp:#090d14;
+  --up:#34d399;--warn:#fbbf24;--down:#f2574c;--black:#b4232a;--indigo:#6366f1;
+  --text:#e6ecf2;--dim:#9fb0bf;--muted:#56616f;--bd:#22303f;--bd2:#2a3542;
+  --disp:"Archivo",system-ui,sans-serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+:root:not([data-theme="light"]){}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow:hidden;
+  background-image:radial-gradient(1100px 560px at 82% -10%,rgba(47,217,232,.10),transparent 62%);}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:clamp(16px,4vw,54px);}
+.slide{display:none;width:min(1120px,100%);max-height:100%;overflow:auto}
+.slide.on{display:block}
+.slide.on>*{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+.slide.on>*:nth-child(1){animation-delay:.02s}
+.slide.on>*:nth-child(2){animation-delay:.12s}
+.slide.on>*:nth-child(3){animation-delay:.24s}
+.slide.on>*:nth-child(4){animation-delay:.36s}
+.slide.on>*:nth-child(5){animation-delay:.48s}
+.slide.on>*:nth-child(6){animation-delay:.60s}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.slide.on>*{animation:none}}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--signal)}
+h1{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;line-height:1.04}
+h2{font-family:var(--disp);font-weight:700;letter-spacing:-.015em;font-size:clamp(1.5rem,3.6vw,2.4rem);margin-bottom:.2rem}
+.sub{color:var(--dim);font-size:clamp(1rem,2vw,1.18rem);margin-top:.5rem;max-width:62ch}
+.mono{font-family:var(--mono)} .acc{color:var(--signal)} .hi{color:var(--signal-hi)}
+.up{color:var(--up)} .warn{color:var(--warn)} .down{color:var(--down)} .muted{color:var(--muted)} .dim{color:var(--dim)}
+.grid{display:grid;gap:14px}
+.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:780px){.c2,.c3{grid-template-columns:1fr}.hidephone{display:none}}
+.card{background:var(--p1);border:1px solid var(--bd);border-radius:12px;padding:16px 16px 18px}
+.card .cn{font-family:var(--disp);font-weight:800;font-size:1.12rem}
+.card .cn .op{color:var(--signal)} .card .cr{color:var(--dim);font-size:.9rem;margin-top:2px}
+.card .cd{color:var(--muted);font-size:.82rem;margin-top:8px;line-height:1.5}
+.badge{font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--bd2);border-radius:999px;padding:.12rem .55rem;color:var(--muted)}
+.badge.live{color:var(--up);border-color:rgba(52,211,153,.45)}
+.badge.sig{color:var(--signal);border-color:var(--signal-deep)}
+ul.pts{list-style:none;margin-top:12px}
+ul.pts li{position:relative;padding:5px 0 5px 20px;color:var(--text);font-size:1.02rem}
+ul.pts li::before{content:"▸";position:absolute;left:0;color:var(--signal)}
+ul.pts li b{color:var(--signal-hi)}
+.kpi{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px}
+.kpi .k{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-family:var(--disp);font-weight:800;font-size:clamp(1.4rem,3vw,2rem)}
+.lede{font-size:clamp(1.05rem,2.2vw,1.3rem);color:var(--dim);line-height:1.55}
+.tag{font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.note{font-family:var(--mono);font-size:.74rem;color:var(--muted);border:1px dashed var(--bd2);border-radius:8px;padding:10px 12px;line-height:1.5}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72rem;border:1px solid var(--bd2);border-radius:999px;padding:3px 10px;color:var(--dim);margin:3px 4px 0 0}
+.pill.ok{color:var(--up);border-color:rgba(52,211,153,.4)} .pill.w{color:var(--warn);border-color:rgba(251,191,36,.4)}
+/* chrome */
+.hud{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:10px 18px;font-family:var(--mono);font-size:.72rem;color:var(--muted);background:linear-gradient(0deg,rgba(10,14,20,.92),transparent);z-index:5}
+.hud .brand{color:var(--dim)} .hud .brand b{color:var(--signal)}
+.hud .sp{flex:1}
+.hud button{appearance:none;background:transparent;border:1px solid var(--bd2);color:var(--dim);border-radius:6px;padding:5px 10px;cursor:pointer;font-family:var(--mono);font-size:.72rem}
+.hud button:hover{border-color:var(--signal-deep);color:var(--signal-hi)}
+.dots{display:flex;gap:6px} .dot{width:7px;height:7px;border-radius:50%;background:var(--bd2);cursor:pointer}
+.dot.on{background:var(--signal)}
+.prog{position:fixed;top:0;left:0;height:3px;background:var(--signal);width:0;z-index:6;transition:width .3s}
+.arrow{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid var(--bd2);background:rgba(14,20,29,.6);color:var(--dim);cursor:pointer;font-size:20px;z-index:5;display:flex;align-items:center;justify-content:center}
+.arrow:hover{color:var(--signal-hi);border-color:var(--signal-deep)} .arrow.l{left:14px} .arrow.r{right:14px}
+.foot{margin-top:18px;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.rule{height:1px;background:var(--bd);margin:16px 0}
+.sm{font-size:.86rem}
+svg text{font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<div class="stage" id="stage">
+
+  <!-- 1 TITLE -->
+  <section class="slide on">
+    <div class="eyebrow">Trading &amp; valorización de derivados · by SegundaOpinión</div>
+    <h1 style="font-size:clamp(2.6rem,8vw,5rem);margin-top:14px">Trade<span class="acc">AI</span></h1>
+    <p class="lede" style="margin-top:14px;max-width:60ch">Una suite para operar <b class="hi">FX, renta fija y opciones</b>, controlar el <b class="hi">capital regulatorio</b> y dejar cada cierre <b class="hi">auditable</b> — sobre una misma mesa.</p>
+    <div class="kpi">
+      <div><div class="k">Módulos</div><div class="v acc">6</div></div>
+      <div><div class="k">En vivo</div><div class="v up">tradefx · traderf · tradevol · tradeblotter · xva</div></div>
+    </div>
+    <div class="foot">Teaser de presentación · usar ← → o la barra inferior</div>
+  </section>
+
+  <!-- 2 THESIS -->
+  <section class="slide">
+    <div class="eyebrow">El problema</div>
+    <h2>Operar sin reventar la corredora.</h2>
+    <p class="sub">Una mesa boutique vive entre tres miedos: <b class="warn">pasarse del capital regulatorio</b> y quedar fuera de mercado, <b class="warn">una multa de la CMF</b> por ofrecer productos complejos sin respaldo, y <b class="warn">dejar cabos sueltos</b> en contabilidad o compliance.</p>
+    <div class="grid c3" style="margin-top:22px">
+      <div class="card"><div class="cn">Capital <span class="op">CMF</span></div><div class="cd">Cada ticket sabe si cabe. Hard-stop antes de reventar la CDB.</div></div>
+      <div class="card"><div class="cn">Compliance</div><div class="cd">Trazabilidad e idoneidad de cada cierre. Nada queda sin registro.</div></div>
+      <div class="card"><div class="cn">Contabilidad</div><div class="cd">Ristras que cuadran, listas para el ERP. No se duplica ni falta nada.</div></div>
+    </div>
+    <p class="lede" style="margin-top:22px">TradeAI convierte esos tres miedos en <b class="acc">tres controles automáticos</b>.</p>
+  </section>
+
+  <!-- 3 SUITE -->
+  <section class="slide">
+    <div class="eyebrow">La suite</div>
+    <h2>Seis módulos, una base.</h2>
+    <div class="grid c3" style="margin-top:18px">
+      <div class="card"><div style="display:flex;align-items:center;gap:8px"><span class="cn">Trade<span class="op">FX</span></span><span class="badge live">live</span></div><div class="cr">RFQ &amp; dealing FX</div><div class="cd">Spot, forwards, NDF, swaps y estrategias. Autotrade y RFQ.</div></div>
+      <div class="card"><div style="display:flex;align-items:center;gap:8px"><span class="cn">Trade<span class="op">RF</span></span><span class="badge live">live</span></div><div class="cr">Renta fija</div><div class="cd">Board de tasas, primer-pincha-opera, precio desde la TIR.</div></div>
+      <div class="card"><div style="display:flex;align-items:center;gap:8px"><span class="cn">Trade<span class="op">Vol</span></span><span class="badge live">live</span></div><div class="cr">Opciones &amp; volatilidad</div><div class="cd">Pricing, superficies de vol, griegas y escenarios.</div></div>
+      <div class="card" style="border-color:var(--signal-deep)"><div style="display:flex;align-items:center;gap:8px"><span class="cn">Trade<span class="op">Blotter</span></span><span class="badge sig">4 en 1</span></div><div class="cr">Capital · Blotter · Conta · Audit</div><div class="cd">El contenedor que consolida, controla y audita.</div></div>
+      <div class="card"><div style="display:flex;align-items:center;gap:8px"><span class="cn">Trade<span class="op">Chat</span></span><span class="badge">pronto</span></div><div class="cr">Chat de mesa supervisado</div><div class="cd">Cliente-trader con copia a Compliance.</div></div>
+      <div class="card"><div style="display:flex;align-items:center;gap:8px"><span class="cn"><span class="op">XVA</span></span><span class="badge live">live</span></div><div class="cr">Valoración &amp; riesgo</div><div class="cd">CVA·DVA·FVA·MVA·KVA, base NIIF 13.</div></div>
+    </div>
+  </section>
+
+  <!-- 4 OPTIONS FOCUS -->
+  <section class="slide">
+    <div class="eyebrow">Foco · TradeVol</div>
+    <h2>Opciones, con la volatilidad de tu lado.</h2>
+    <div class="grid c2" style="margin-top:14px;align-items:center">
+      <div>
+        <svg viewBox="0 0 420 240" width="100%" height="auto" aria-label="Superficie de volatilidad (smile)">
+          <rect x="0" y="0" width="420" height="240" fill="var(--p1)" rx="10"/>
+          <g stroke="var(--bd)" stroke-width="1">
+            <line x1="40" y1="200" x2="400" y2="200"/><line x1="40" y1="30" x2="40" y2="200"/>
+            <line x1="40" y1="150" x2="400" y2="150" opacity=".4"/><line x1="40" y1="100" x2="400" y2="100" opacity=".4"/><line x1="40" y1="60" x2="400" y2="60" opacity=".4"/>
+          </g>
+          <path d="M40,70 C120,150 180,165 220,150 C280,128 340,90 400,52" fill="none" stroke="var(--signal)" stroke-width="2.5"/>
+          <path d="M40,70 C120,150 180,165 220,150 C280,128 340,90 400,52 L400,200 L40,200 Z" fill="var(--signal)" opacity=".08"/>
+          <circle cx="220" cy="150" r="4" fill="var(--signal-hi)"/><text x="228" y="146" font-size="10" fill="var(--dim)">ATM</text>
+          <text x="40" y="218" font-size="9" fill="var(--muted)">25Δ Put</text>
+          <text x="360" y="218" font-size="9" fill="var(--muted)">25Δ Call</text>
+          <text x="8" y="40" font-size="9" fill="var(--muted)" transform="rotate(-90 8,40)">Vol</text>
+        </svg>
+      </div>
+      <div>
+        <ul class="pts">
+          <li><b>Pricing</b> de calls, puts y estructuras (forward mejorado, depósito con opción).</li>
+          <li><b>Superficies de volatilidad</b> por smile y plazo.</li>
+          <li><b>Griegas</b> Delta · Gamma · Vega · Theta en vivo.</li>
+          <li><b>Escenarios</b> Normal → Volátil → Pánico.</li>
+          <li>Todo <b>conectado al control de capital</b> del blotter.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:14px">Las estructuras de opción consumen más capital que un forward — y el blotter lo muestra antes de cerrar.</p>
+  </section>
+
+  <!-- 5 TRADEBLOTTER -->
+  <section class="slide">
+    <div class="eyebrow">TradeBlotter · 4 herramientas, 1 ID madre</div>
+    <h2>Cada ticket, controlado de punta a punta.</h2>
+    <div class="grid c2" style="margin-top:16px">
+      <div class="card"><div class="cn">RequerCapital <span class="op">· CMF</span></div><div class="cd">Simulador de requerimiento, grilla de consumo por producto/plazo (SA-CCR), doble pozo CDB/Coto y hard-stop.</div></div>
+      <div class="card"><div class="cn">Blotter <span class="op">de Tickets</span></div><div class="cd">Estructuras madre cerradas: cliente, producto, nocional, exposición y requerimiento.</div></div>
+      <div class="card"><div class="cn">Conta <span class="op">· Ristras</span></div><div class="cd">Asientos por hito (apertura, valorización, liquidación) con doble partida que cuadra.</div></div>
+      <div class="card"><div class="cn">Compliance <span class="op">· Audit</span></div><div class="cd">Trazabilidad de cada cierre, idoneidad con versiones y comparación de condiciones.</div></div>
+    </div>
+    <p class="lede" style="margin-top:18px">Mismo <b class="acc">ID de Estructura Madre</b> atraviesa riesgo → contabilidad → auditoría. Nada se pierde entre sistemas.</p>
+  </section>
+
+  <!-- 6 CMF HARD STOP -->
+  <section class="slide">
+    <div class="eyebrow">RequerCapital · el candado</div>
+    <h2>Nunca revientes la corredora.</h2>
+    <div class="grid c2" style="margin-top:14px;align-items:center">
+      <div>
+        <svg viewBox="0 0 420 150" width="100%" height="auto" aria-label="Semáforo de consumo de capital">
+          <rect x="20" y="60" width="380" height="20" rx="10" fill="var(--inp)" stroke="var(--bd2)"/>
+          <rect x="20" y="60" width="76" height="20" rx="10" fill="var(--up)"/>
+          <rect x="96" y="60" width="152" height="20" fill="var(--warn)" opacity=".85"/>
+          <rect x="248" y="60" width="76" height="20" fill="var(--down)" opacity=".9"/>
+          <rect x="324" y="60" width="76" height="20" rx="0" fill="var(--black)"/>
+          <line x1="324" y1="52" x2="324" y2="88" stroke="var(--signal-hi)" stroke-width="2"/>
+          <text x="324" y="46" font-size="9" fill="var(--signal-hi)" text-anchor="middle">hard-stop 80%</text>
+          <text x="20" y="104" font-size="9" fill="var(--up)">Verde &lt;20%</text>
+          <text x="150" y="104" font-size="9" fill="var(--warn)">Amarillo</text>
+          <text x="255" y="104" font-size="9" fill="var(--down)">Rojo</text>
+          <text x="332" y="104" font-size="9" fill="#fff">Bloqueo</text>
+          <text x="20" y="130" font-size="10" fill="var(--dim)">CDB 111% → ticket verde para Coto, igual BLOQUEADO</text>
+        </svg>
+      </div>
+      <div>
+        <ul class="pts">
+          <li>Doble pozo: <b>CDB (corredora)</b> y <b>Coto (broker)</b>.</li>
+          <li>Requerimiento <b>CMF NCG 562</b> = 3%×APR + add-on.</li>
+          <li>Un ticket solo cierra si cabe en <b>los dos</b>.</li>
+          <li>Si <b>mata la CDB</b> → bloqueo, aunque tu línea esté verde.</li>
+          <li>Te dice <b>en cuánto reventás</b>, antes de operar.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 COMPLIANCE + CONTA -->
+  <section class="slide">
+    <div class="eyebrow">Compliance · Audit &amp; Conta</div>
+    <h2>Todo queda en regla, y queda escrito.</h2>
+    <div class="grid c2" style="margin-top:14px">
+      <div class="card">
+        <div class="cn">Compliance <span class="op">· Audit</span></div>
+        <ul class="pts" style="margin-top:8px">
+          <li>Quién cerró, por qué vía, con qué autorización.</li>
+          <li><b>Idoneidad (suitability)</b> con versiones: 2024 → 2025 → 2026.</li>
+          <li>Comparación de versiones del ticket (qué cambió).</li>
+          <li>Audit por ticket · por empresa · por operador.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="cn">Conta <span class="op">· Ristras</span></div>
+        <ul class="pts" style="margin-top:8px">
+          <li>R0 apertura · R1 valorización · R2 liquidación.</li>
+          <li><b>Doble partida</b>: Debe = Haber, siempre.</li>
+          <li>R2 reversa lo abierto → no duplica ni falta nada.</li>
+          <li>Pipe / JSON para el ERP. El ERP ratifica.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="margin-top:14px">Protección frente a la CMF: no se ofrecen productos de alta complejidad sin idoneidad declarada y registrada.</p>
+  </section>
+
+  <!-- 8 REVENUE / VALUE -->
+  <section class="slide">
+    <div class="eyebrow">La ecuación</div>
+    <h2>Genero revenue y los mantengo protegidos.</h2>
+    <div class="grid c2" style="margin-top:14px;align-items:center">
+      <div>
+        <svg viewBox="0 0 420 220" width="100%" height="auto" aria-label="Revenue y protección">
+          <rect x="0" y="0" width="420" height="220" fill="var(--p1)" rx="10"/>
+          <line x1="40" y1="185" x2="400" y2="185" stroke="var(--bd)"/>
+          <g>
+            <rect x="70" y="150" width="46" height="35" fill="var(--signal-deep)"/>
+            <rect x="150" y="120" width="46" height="65" fill="var(--signal)"/>
+            <rect x="230" y="92" width="46" height="93" fill="var(--signal)"/>
+            <rect x="310" y="60" width="46" height="125" fill="var(--signal-hi)"/>
+          </g>
+          <text x="93" y="200" font-size="9" fill="var(--muted)" text-anchor="middle">M1</text>
+          <text x="173" y="200" font-size="9" fill="var(--muted)" text-anchor="middle">M2</text>
+          <text x="253" y="200" font-size="9" fill="var(--muted)" text-anchor="middle">M3</text>
+          <text x="333" y="200" font-size="9" fill="var(--muted)" text-anchor="middle">M+</text>
+          <text x="40" y="30" font-size="10" fill="var(--dim)">Revenue por spread (mesa)</text>
+          <path d="M70,170 C160,120 250,95 356,72" fill="none" stroke="var(--up)" stroke-width="2" stroke-dasharray="4 3"/>
+          <text x="250" y="60" font-size="9" fill="var(--up)">cartera protegida</text>
+        </svg>
+      </div>
+      <div>
+        <ul class="pts">
+          <li>Enrolo clientes y opero <b>en nombre de la corredora</b>.</li>
+          <li>Cada operación <b>genera revenue</b> por el spread de la mesa…</li>
+          <li>…y a la vez <b>mantiene la cartera protegida</b> dentro de lo que TradeAI permite.</li>
+          <li>Más negocio y más seguridad, al mismo tiempo.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 QUIEN SOY -->
+  <section class="slide">
+    <div class="eyebrow">Quién soy</div>
+    <h2>Broker de mercado. Clientes, operación y comisión.</h2>
+    <p class="sub">Llego con oficio y cartera: enrolo clientes nuevos, opero en nombre de la corredora y comisiono por el negocio cerrado.</p>
+    <div class="grid c3" style="margin-top:20px">
+      <div class="card"><div class="tag">Enrolo</div><div class="cd sm" style="color:var(--text)">Traigo clientes nuevos y los sumo al pipeline de la mesa.</div></div>
+      <div class="card"><div class="tag">Opero</div><div class="cd sm" style="color:var(--text)">Vendo y bloteo en nombre de la corredora, con los productos aprobados.</div></div>
+      <div class="card"><div class="tag">Comisiono</div><div class="cd sm" style="color:var(--text)">Mi incentivo es el negocio cerrado — alineado con el de ustedes.</div></div>
+    </div>
+    <p class="note" style="margin-top:20px">La diferencia: no trabajo con planillas sueltas. Trabajo con <b class="acc">TradeAI</b>.</p>
+  </section>
+
+  <!-- 10 MI FORMA -->
+  <section class="slide">
+    <div class="eyebrow">Mi forma de trabajar</div>
+    <h2>Pipeline ordenado, corredora protegida.</h2>
+    <div class="grid c2" style="margin-top:16px">
+      <div class="card"><div class="cn">Más negocio</div><ul class="pts sm" style="margin-top:8px">
+        <li><b>Pipeline de enrolamiento</b> optimizado: no se pierden deals.</li>
+        <li>Captura ordenada de cada operación — nada queda en un papel suelto.</li>
+      </ul></div>
+      <div class="card"><div class="cn">Menos riesgo para ustedes</div><ul class="pts sm" style="margin-top:8px">
+        <li><b>Cero operaciones perdidas</b> en contabilidad.</li>
+        <li><b>Compliance al día</b> con la CMF (idoneidad registrada).</li>
+        <li><b>Nunca reviento el capital</b> de la corredora.</li>
+      </ul></div>
+    </div>
+    <p class="lede" style="margin-top:20px">Me apoyo en mi herramienta para <b class="acc">vender más</b> y, a la vez, <b class="acc">dejarlos protegidos</b>.</p>
+  </section>
+
+  <!-- 11 CLOSE / VALOR -->
+  <section class="slide">
+    <div class="eyebrow">Qué ganan</div>
+    <h2>Un broker que suma. Una herramienta que empuja a toda la mesa.</h2>
+    <div class="grid c2" style="margin-top:16px">
+      <div class="card"><div class="tag">Me suman a mí</div><div class="cd sm" style="color:var(--text)">Uso TradeAI como mi control y registro: ordenado, sin perder deals, y ustedes operan tranquilos.</div></div>
+      <div class="card" style="border-color:var(--signal-deep)"><div class="tag">Un push para la oficina</div><div class="cd sm" style="color:var(--text)">La herramienta puede optimizar a toda la corredora: más negocio y más seguridad normativa, contable y de gestión, para todos.</div></div>
+    </div>
+    <h1 style="font-size:clamp(1.8rem,5vw,2.8rem);margin-top:22px">Hagamos negocio juntos — <span class="acc">seguros</span>.</h1>
+    <div class="foot" style="margin-top:16px">TradeAI · by SegundaOpinión · coto.fintech@gmail.com<br>tradeblotter.cl · tradefx.cl · traderf.cl · tradevol.cl · xva.cl</div>
+  </section>
+
+</div>
+
+<div class="arrow l" onclick="go(-1)">‹</div>
+<div class="arrow r" onclick="go(1)">›</div>
+
+<div class="hud">
+  <span class="brand">Trade<b>AI</b> · Teaser</span>
+  <span id="count">1 / 11</span>
+  <span class="sp"></span>
+  <div class="dots" id="dots"></div>
+  <span class="sp"></span>
+  <button id="play" onclick="toggle()">▶ Auto</button>
+  <button onclick="go(1)">Siguiente ›</button>
+</div>
+
+<script>
+var slides=[].slice.call(document.querySelectorAll('.slide'));
+var i=0, timer=null;
+var dots=document.getElementById('dots');
+slides.forEach(function(_,n){var d=document.createElement('span');d.className='dot'+(n===0?' on':'');d.onclick=function(){show(n)};dots.appendChild(d);});
+function show(n){i=(n+slides.length)%slides.length;
+  slides.forEach(function(s,k){s.classList.toggle('on',k===i);});
+  [].slice.call(dots.children).forEach(function(d,k){d.classList.toggle('on',k===i);});
+  document.getElementById('count').textContent=(i+1)+' / '+slides.length;
+  document.getElementById('prog').style.width=((i+1)/slides.length*100)+'%';}
+function go(d){show(i+d);}
+function toggle(){var b=document.getElementById('play');
+  if(timer){clearInterval(timer);timer=null;b.textContent='▶ Auto';}
+  else{b.textContent='❚❚ Pausa';timer=setInterval(function(){go(1);},6000);}}
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key===' '){go(1);e.preventDefault();}
+  if(e.key==='ArrowLeft')go(-1);});
+show(0);
+</script>
+</body>
+</html>
