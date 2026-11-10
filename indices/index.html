@@ -52,31 +52,35 @@ a{color:var(--signal)}
 
   <div class="note">
     <b>Fuente actual:</b> Banco Central de Chile vía <a href="https://mindicador.cl" target="_blank" rel="noopener">mindicador.cl</a> (Observado, UF, TPM — valor diario oficial). ·
-    <b>USD/CLP intradía:</b> en esta etapa se usa el Observado del día como base y el "tiempo real" se simula alrededor; se conectará un feed de pago (TradingView/Bloomberg) cuando haya clientes. ·
+    <b>USD/CLP tiempo real:</b> intradía de <b>Google Finance</b> (vía Google Sheets publicado, actualiza ~1–20 min); el Observado se mantiene como base contable. Un feed de pago (Bloomberg) queda para más adelante. ·
     Los módulos leen de aquí, así cambia en un solo lugar.
   </div>
 </div>
 
 <script>
 var SRC = "https://mindicador.cl/api";
+var SPOT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRjzyA3DLGwzLxDt8hmft80NqWOQKaMVpGIwBptjSuQIxcnizWDj5Fn3XOjXhg6OAKdlinckEW1vZ5d/pub?output=csv";
 function nf(n,d){try{return Number(n).toLocaleString("es-CL",{minimumFractionDigits:d,maximumFractionDigits:d});}catch(e){return n;}}
 function card(k,v,u,sig){return '<div class="card"><div class="k">'+k+'</div><div class="v'+(sig?' sig':'')+'">'+v+'</div><div class="u">'+u+'</div></div>';}
+function getSpot(){return fetch(SPOT).then(function(r){return r.text();}).then(function(t){var f=t.split(/\r?\n/)[0].replace(/"/g,"").trim();var v=parseFloat(f.replace(/\./g,"").replace(",","."));return (isFinite(v)&&v>0)?v:null;}).catch(function(){return null;});}
 function load(){
-  fetch(SRC).then(function(r){return r.json();}).then(function(d){
+  Promise.all([fetch(SRC).then(function(r){return r.json();}), getSpot()]).then(function(a){
+    var d=a[0], spot=a[1];
     var g="";
-    g+=card("USD/CLP Observado","$"+nf(d.dolar.valor,1),"Dólar observado · "+d.dolar.fecha.slice(0,10),true);
+    if(spot) g+=card("USD/CLP Tiempo real","$"+nf(spot,2),"Google Finance · intradía",true);
+    g+=card("USD/CLP Observado","$"+nf(d.dolar.valor,1),"Dólar observado · "+d.dolar.fecha.slice(0,10),false);
     g+=card("UF","$"+nf(d.uf.valor,2),"Unidad de fomento · "+d.uf.fecha.slice(0,10),false);
     g+=card("TPM",nf(d.tpm.valor,2)+"%","Tasa de política monetaria",false);
     g+=card("Euro/CLP","$"+nf(d.euro.valor,1),"Euro · "+d.euro.fecha.slice(0,10),false);
     g+=card("UTM","$"+nf(d.utm.valor,0),"Unidad tributaria mensual",false);
     document.getElementById("grid").innerHTML=g;
-    document.getElementById("status").textContent="En vivo · actualizado "+new Date().toLocaleString("es-CL")+" · fecha dato "+d.fecha.slice(0,10);
+    document.getElementById("status").textContent="En vivo · "+new Date().toLocaleString("es-CL")+(spot?" · USD/CLP intradía Google":"")+" · dato "+d.fecha.slice(0,10);
   }).catch(function(e){
     document.getElementById("status").innerHTML='<span class="err">No se pudo conectar a la fuente. Reintentando…</span>';
   });
 }
 load();
-setInterval(load, 5*60*1000);
+setInterval(load, 60*1000);
 </script>
 </body>
 </html>
