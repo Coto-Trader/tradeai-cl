@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mantenedores · Suite TradeAI</title>
+<meta name="description" content="Base central de la Suite TradeAI: Clientes, Usuarios, Perfiles y Permisos. Una sola base para todos los módulos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--signal:#2fd9e8;--signal-hi:#8ceff6;--signal-deep:#1f9dac;--bg:#0a0e14;--p1:#0e141d;--p2:#121a24;--p3:#16202c;--inp:#090d14;
+  --up:#34d399;--warn:#fbbf24;--down:#f2574c;--text:#e6ecf2;--dim:#9fb0bf;--muted:#56616f;--bd:#22303f;--bd2:#2a3542;
+  --disp:"Archivo",system-ui,sans-serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--r:8px;color-scheme:dark;}
+*{box-sizing:border-box;margin:0}body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;
+  background-image:radial-gradient(1100px 560px at 82% -10%,rgba(47,217,232,.08),transparent 62%);min-height:100vh}
+.ribbon{display:flex;gap:10px;align-items:center;padding:8px 16px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);background:var(--p1);border-bottom:1px solid var(--bd)}
+.ribbon a{color:var(--dim);text-decoration:none}.ribbon a:hover{color:var(--signal-hi)}.ribbon .here{color:var(--signal)}.ribbon .sep{color:var(--muted)}
+.nav{display:flex;gap:2px;padding:0 12px;background:var(--p1);border-bottom:1px solid var(--bd);overflow-x:auto}
+.nav button{background:transparent;border:none;cursor:pointer;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;padding:12px 14px;color:var(--dim);border-bottom:2px solid transparent;white-space:nowrap}
+.nav button.on{color:var(--signal);border-bottom-color:var(--signal)}
+.wrap{max-width:1120px;margin:0 auto;padding:18px 16px}
+h1{font-family:var(--disp);font-weight:800;font-size:22px;letter-spacing:-.02em}h1 .acc{color:var(--signal)}
+.sub{color:var(--dim);font-family:var(--mono);font-size:11px;margin-top:3px}
+.panel{background:var(--p1);border:1px solid var(--bd);border-radius:var(--r);margin-top:16px}
+.ph{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--bd)}
+.ph h2{font-family:var(--disp);font-weight:700;font-size:14px}.ph .sp{flex:1}.ph .hint{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+.pb{padding:14px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:7px 8px;border-bottom:1px solid var(--bd)}
+td{padding:8px;border-bottom:1px solid #1e2733}
+.mono{font-family:var(--mono)}.dim{color:var(--dim)}.muted{color:var(--muted)}
+input,select{font-family:var(--mono);font-size:12.5px;color:var(--text);background:var(--inp);border:1px solid var(--bd2);border-radius:5px;padding:7px 8px;outline:none;width:100%}
+input:focus,select:focus{border-color:var(--signal-deep)}
+.row{display:grid;gap:10px;grid-template-columns:2fr 1.4fr 1.2fr auto;align-items:end;margin-top:12px}
+@media(max-width:720px){.row{grid-template-columns:1fr}}
+label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--dim)}
+label .l{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--muted)}
+.btn{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text);background:var(--p3);border:1px solid var(--bd2);border-radius:5px;padding:8px 13px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--signal-deep);color:var(--signal-hi)}.btn.primary{background:var(--signal-deep);border-color:var(--signal);color:#04171a;font-weight:700}
+.btn.x{color:var(--muted);padding:4px 8px}.btn.x:hover{color:var(--down);border-color:var(--down)}
+.chip{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--bd2);color:var(--dim)}
+.chip.A{color:var(--signal);border-color:var(--signal-deep)}.chip.ok{color:var(--up);border-color:rgba(52,211,153,.4)}
+.msg{font-family:var(--mono);font-size:11.5px;margin-top:8px;min-height:16px}.msg.err{color:var(--warn)}.msg.ok{color:var(--up)}
+select.acc{padding:4px 6px;font-size:11px;width:auto;min-width:96px}
+select.acc.na{color:var(--muted)}select.acc.rd{color:var(--warn)}select.acc.ed{color:var(--up)}
+.note{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px dashed var(--bd2);border-radius:6px;padding:10px 12px;margin-top:14px;line-height:1.6}
+.scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="ribbon">
+  <a href="https://tradeai.cl">Suite TradeAI</a><span class="sep">/</span>
+  <span class="here">Mantenedores</span><span class="sp" style="flex:1"></span>
+  <span style="color:var(--muted)">base central · maqueta</span>
+</div>
+<div class="nav" id="nav"></div>
+<div class="wrap">
+  <h1 id="title">Mantenedores</h1>
+  <div class="sub" id="subtitle"></div>
+  <div id="view"></div>
+  <div class="note">
+    Base central de la suite: <b>una sola</b> para todos los módulos. Los clientes se publican en <a href="clientes.json" style="color:var(--signal)">clientes.json</a> (base compartida que leen los módulos). En maqueta la edición se guarda local; la propagación en tiempo real entre dominios va con backend en producción. Futuro: onboarding, suitability, líneas, spreads por producto, y la autorización de cada edición.
+  </div>
+</div>
+
+<script>
+// ---------- estado ----------
+var MODULES = ["TradeFX","TradeRF","TradeVol","TradeBlotter","TradeChat","XVA","Mantenedores"];
+var ACCESS = ["Sin acceso","Lectura","Edición"];
+var TIPOS = ["Exportador","Importador","Minería","Agro/Exportador","Institucional","Corporativo","Fondo","Family Office","Persona Natural","Trading","Otro"];
+var FAMILIAS = ["Trader","Sales","Gerente Mesa","Riesgos","Contable","Compliance","Control Interno","Back Office","Middle Office","Auditor"];
+
+function uid(){return Math.random().toString(36).slice(2,8);}
+function ls(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+function seedClientes(){return [
+  {id:"exp1",nombre:"Exportadora Uno SPA",tipo:"Exportador",rut:"76.111.111-1",estado:"Activo"},
+  {id:"imp2",nombre:"Importadora Dos SPA",tipo:"Importador",rut:"76.222.222-2",estado:"Activo"},
+  {id:"min1",nombre:"Minera Uno SPA",tipo:"Minería",rut:"76.333.333-3",estado:"Activo"},
+  {id:"fru1",nombre:"Frutas Uno SPA",tipo:"Agro/Exportador",rut:"76.444.444-4",estado:"Activo"},
+  {id:"insA",nombre:"Institucional A",tipo:"Institucional",rut:"76.555.555-5",estado:"Activo"},
+  {id:"corB",nombre:"Corporativo B",tipo:"Corporativo",rut:"76.666.666-6",estado:"Activo"},
+  {id:"hfX",nombre:"Hedge Fund X",tipo:"Fondo",rut:"76.777.777-7",estado:"Activo"},
+  {id:"foA",nombre:"Family Office Alfa",tipo:"Family Office",rut:"76.888.888-8",estado:"Activo"},
+  {id:"pn1",nombre:"Persona Natural Patrimonio Uno",tipo:"Persona Natural",rut:"12.345.678-9",estado:"Activo"},
+  {id:"mpt",nombre:"Cliente Multiproductos Trading SPA",tipo:"Trading",rut:"76.999.999-9",estado:"Activo"}
+];}
+function seedPerfiles(){var out=[];FAMILIAS.forEach(function(f){["A","B"].forEach(function(n){
+  var perm={};MODULES.forEach(function(m){perm[m]="Edición";}); // por ahora todos acceso total
+  out.push({id:uid(),familia:f,nivel:n,nombre:f+" "+n,permisos:perm});
+});});return out;}
+function seedUsuarios(perfiles){
+  function pid(nombre){var p=perfiles.find(function(x){return x.nombre===nombre;});return p?p.id:perfiles[0].id;}
+  return [
+    {id:uid(),nombre:"C. Riveros",email:"criveros@corredora.cl",perfilId:pid("Trader A"),estado:"Activo"},
+    {id:uid(),nombre:"M. del Campo",email:"mdelcampo@corredora.cl",perfilId:pid("Sales A"),estado:"Activo"},
+    {id:uid(),nombre:"P. Soto",email:"psoto@corredora.cl",perfilId:pid("Gerente Mesa A"),estado:"Activo"},
+    {id:uid(),nombre:"L. Fuentes",email:"lfuentes@corredora.cl",perfilId:pid("Riesgos A"),estado:"Activo"},
+    {id:uid(),nombre:"A. Díaz",email:"adiaz@corredora.cl",perfilId:pid("Compliance A"),estado:"Activo"}
+  ];
+}
+
+var clientes = ls("tai.clientes", null) || seedClientes();
+var perfiles = ls("tai.perfiles", null) || seedPerfiles();
+var usuarios = ls("tai.usuarios", null) || seedUsuarios(perfiles);
+save("tai.clientes",clientes);save("tai.perfiles",perfiles);save("tai.usuarios",usuarios);
+
+// ---------- router ----------
+var TABS=[["clientes","Clientes"],["usuarios","Usuarios"],["perfiles","Perfiles"],["permisos","Permisos"]];
+function route(){var h=(location.hash.replace(/^#\/?/,"")||"clientes").toLowerCase();return TABS.some(function(t){return t[0]===h;})?h:"clientes";}
+function nav(){var r=route();document.getElementById("nav").innerHTML=TABS.map(function(t){return '<button class="'+(t[0]===r?"on":"")+'" onclick="location.hash=\'#/'+t[0]+'\'">'+t[1]+'</button>';}).join("");}
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function opt(list,sel){return list.map(function(v){return '<option'+(v===sel?" selected":"")+'>'+esc(v)+'</option>';}).join("");}
+
+// ---------- Clientes ----------
+function renderClientes(){
+  var rows=clientes.map(function(c){return '<tr><td>'+esc(c.nombre)+'</td><td class="dim">'+esc(c.tipo)+'</td><td class="mono dim">'+esc(c.rut)+'</td><td><span class="chip ok">'+esc(c.estado)+'</span></td><td style="text-align:right"><button class="btn x" onclick="delCliente(\''+c.id+'\')">✕</button></td></tr>';}).join("");
+  return '<div class="panel"><div class="ph"><h2>Clientes</h2><span class="sp"></span><span class="hint">'+clientes.length+' · base única de la suite</span></div><div class="pb">'
+    +'<div class="scroll"><table><thead><tr><th>Nombre</th><th>Tipo</th><th>RUT</th><th>Estado</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+    +'<div class="row"><label><span class="l">Nombre</span><input id="c_nom" placeholder="Exportadora Tres SPA"></label>'
+    +'<label><span class="l">Tipo</span><select id="c_tipo">'+opt(TIPOS)+'</select></label>'
+    +'<label><span class="l">RUT</span><input id="c_rut" placeholder="76.000.000-0"></label>'
+    +'<button class="btn primary" onclick="addCliente()">Agregar</button></div>'
+    +'<div class="msg" id="c_msg"></div></div></div>';
+}
+function addCliente(){
+  var nom=(document.getElementById("c_nom").value||"").trim();
+  var m=document.getElementById("c_msg");
+  if(!nom){m.className="msg err";m.textContent="Falta el nombre.";return;}
+  if(clientes.some(function(c){return c.nombre.toLowerCase()===nom.toLowerCase();})){m.className="msg err";m.textContent="⚠ Ese cliente ya existe en la base — no se duplica.";return;}
+  clientes.unshift({id:uid(),nombre:nom,tipo:document.getElementById("c_tipo").value,rut:(document.getElementById("c_rut").value||"").trim()||"—",estado:"Activo"});
+  save("tai.clientes",clientes);render();
+}
+function delCliente(id){clientes=clientes.filter(function(c){return c.id!==id;});save("tai.clientes",clientes);render();}
+
+// ---------- Usuarios ----------
+function renderUsuarios(){
+  var pname={};perfiles.forEach(function(p){pname[p.id]=p.nombre;});
+  var rows=usuarios.map(function(u){return '<tr><td>'+esc(u.nombre)+'</td><td class="mono dim">'+esc(u.email)+'</td><td><span class="chip A">'+esc(pname[u.perfilId]||"—")+'</span></td><td><span class="chip ok">'+esc(u.estado)+'</span></td><td style="text-align:right"><button class="btn x" onclick="delUsuario(\''+u.id+'\')">✕</button></td></tr>';}).join("");
+  var perfOpts=perfiles.map(function(p){return '<option value="'+p.id+'">'+esc(p.nombre)+'</option>';}).join("");
+  return '<div class="panel"><div class="ph"><h2>Usuarios del sistema</h2><span class="sp"></span><span class="hint">no son clientes · cada uno con 1 perfil</span></div><div class="pb">'
+    +'<div class="scroll"><table><thead><tr><th>Nombre</th><th>Email</th><th>Perfil</th><th>Estado</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+    +'<div class="row"><label><span class="l">Nombre</span><input id="u_nom" placeholder="Nombre Apellido"></label>'
+    +'<label><span class="l">Email</span><input id="u_mail" placeholder="usuario@corredora.cl"></label>'
+    +'<label><span class="l">Perfil (obligatorio)</span><select id="u_perfil">'+perfOpts+'</select></label>'
+    +'<button class="btn primary" onclick="addUsuario()">Agregar</button></div>'
+    +'<div class="msg" id="u_msg"></div></div></div>';
+}
+function addUsuario(){
+  var nom=(document.getElementById("u_nom").value||"").trim();var mail=(document.getElementById("u_mail").value||"").trim();
+  var m=document.getElementById("u_msg");
+  if(!nom){m.className="msg err";m.textContent="Falta el nombre.";return;}
+  if(usuarios.some(function(u){return u.email&&u.email.toLowerCase()===mail.toLowerCase()&&mail;})){m.className="msg err";m.textContent="⚠ Ya existe un usuario con ese email.";return;}
+  usuarios.unshift({id:uid(),nombre:nom,email:mail||"—",perfilId:document.getElementById("u_perfil").value,estado:"Activo"});
+  save("tai.usuarios",usuarios);render();
+}
+function delUsuario(id){usuarios=usuarios.filter(function(u){return u.id!==id;});save("tai.usuarios",usuarios);render();}
+
+// ---------- Perfiles ----------
+function renderPerfiles(){
+  var cnt={};usuarios.forEach(function(u){cnt[u.perfilId]=(cnt[u.perfilId]||0)+1;});
+  var rows=perfiles.map(function(p){return '<tr><td><b>'+esc(p.nombre)+'</b></td><td class="dim">'+esc(p.familia)+'</td><td><span class="chip A">Nivel '+esc(p.nivel)+'</span></td><td class="mono dim">'+(cnt[p.id]||0)+' usuario(s)</td><td style="text-align:right"><button class="btn x" onclick="delPerfil(\''+p.id+'\')">✕</button></td></tr>';}).join("");
+  return '<div class="panel"><div class="ph"><h2>Perfiles</h2><span class="sp"></span><span class="hint">Nivel A/B = seniority (se define a futuro) · 1 perfil por usuario</span></div><div class="pb">'
+    +'<div class="scroll"><table><thead><tr><th>Perfil</th><th>Familia</th><th>Nivel</th><th>Usuarios</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+    +'<div class="row" style="grid-template-columns:1.6fr 1fr auto"><label><span class="l">Familia</span><select id="p_fam">'+opt(FAMILIAS)+'</select></label>'
+    +'<label><span class="l">Nivel</span><select id="p_niv"><option>A</option><option>B</option></select></label>'
+    +'<button class="btn primary" onclick="addPerfil()">Crear perfil</button></div>'
+    +'<div class="msg" id="p_msg"></div></div></div>';
+}
+function addPerfil(){
+  var fam=document.getElementById("p_fam").value;var niv=document.getElementById("p_niv").value;var nombre=fam+" "+niv;
+  var m=document.getElementById("p_msg");
+  if(perfiles.some(function(p){return p.nombre===nombre;})){m.className="msg err";m.textContent="⚠ Ese perfil ya existe.";return;}
+  var perm={};MODULES.forEach(function(mo){perm[mo]="Edición";});
+  perfiles.push({id:uid(),familia:fam,nivel:niv,nombre:nombre,permisos:perm});
+  save("tai.perfiles",perfiles);render();
+}
+function delPerfil(id){
+  if(usuarios.some(function(u){return u.perfilId===id;})){alert("No se puede borrar: hay usuarios con este perfil.");return;}
+  perfiles=perfiles.filter(function(p){return p.id!==id;});save("tai.perfiles",perfiles);render();
+}
+
+// ---------- Permisos (matriz perfil × módulo) ----------
+function clsAcc(v){return v==="Sin acceso"?"na":v==="Lectura"?"rd":"ed";}
+function renderPermisos(){
+  var head=MODULES.map(function(m){return '<th>'+esc(m)+'</th>';}).join("");
+  var rows=perfiles.map(function(p){
+    var cells=MODULES.map(function(m){var v=p.permisos[m]||"Sin acceso";
+      return '<td><select class="acc '+clsAcc(v)+'" onchange="setPerm(\''+p.id+'\',\''+m+'\',this.value,this)">'+opt(ACCESS,v)+'</select></td>';
+    }).join("");
+    return '<tr><td><b>'+esc(p.nombre)+'</b></td>'+cells+'</tr>';
+  }).join("");
+  return '<div class="panel"><div class="ph"><h2>Permisos · perfil × módulo</h2><span class="sp"></span><span class="hint">Sin acceso / Lectura / Edición · la autorización de cada edición va en otra fase</span></div><div class="pb">'
+    +'<div class="scroll"><table><thead><tr><th>Perfil</th>'+head+'</tr></thead><tbody>'+rows+'</tbody></table></div>'
+    +'<div class="msg mono muted" style="margin-top:10px">Por ahora todos arrancan en <b style="color:var(--up)">Edición</b> (acceso total). Acá armás la separación: quién solo ve, quién no ve, quién ingresa, quién modifica — como una tesorería profesional.</div></div></div>';
+}
+function setPerm(pid,mod,val,el){
+  var p=perfiles.find(function(x){return x.id===pid;});if(!p)return;p.permisos[mod]=val;save("tai.perfiles",perfiles);
+  el.className="acc "+clsAcc(val);
+}
+
+// ---------- render ----------
+var SUB={clientes:"Base única de clientes — la misma para FX, RF, Vol, Blotter y Chat.",usuarios:"Usuarios internos (no clientes). Cada uno con un perfil obligatorio.",perfiles:"Perfiles por familia y nivel. El usuario no puede tener dos perfiles.",permisos:"Grilla de accesos por perfil y módulo."};
+function render(){
+  var r=route();nav();
+  document.getElementById("subtitle").textContent=SUB[r]||"";
+  var v=document.getElementById("view");
+  v.innerHTML = r==="clientes"?renderClientes():r==="usuarios"?renderUsuarios():r==="perfiles"?renderPerfiles():renderPermisos();
+}
+window.addEventListener("hashchange",render);
+render();
+</script>
+</body>
+</html>

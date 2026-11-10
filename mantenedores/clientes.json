@@ -1,0 +1,12 @@
+[
+  { "id": "exp1", "nombre": "Exportadora Uno SPA", "tipo": "Exportador", "rut": "76.111.111-1", "estado": "Activo" },
+  { "id": "imp2", "nombre": "Importadora Dos SPA", "tipo": "Importador", "rut": "76.222.222-2", "estado": "Activo" },
+  { "id": "min1", "nombre": "Minera Uno SPA", "tipo": "Minería", "rut": "76.333.333-3", "estado": "Activo" },
+  { "id": "fru1", "nombre": "Frutas Uno SPA", "tipo": "Agro/Exportador", "rut": "76.444.444-4", "estado": "Activo" },
+  { "id": "insA", "nombre": "Institucional A", "tipo": "Institucional", "rut": "76.555.555-5", "estado": "Activo" },
+  { "id": "corB", "nombre": "Corporativo B", "tipo": "Corporativo", "rut": "76.666.666-6", "estado": "Activo" },
+  { "id": "hfX", "nombre": "Hedge Fund X", "tipo": "Fondo", "rut": "76.777.777-7", "estado": "Activo" },
+  { "id": "foA", "nombre": "Family Office Alfa", "tipo": "Family Office", "rut": "76.888.888-8", "estado": "Activo" },
+  { "id": "pn1", "nombre": "Persona Natural Patrimonio Uno", "tipo": "Persona Natural", "rut": "12.345.678-9", "estado": "Activo" },
+  { "id": "mpt", "nombre": "Cliente Multiproductos Trading SPA", "tipo": "Trading", "rut": "76.999.999-9", "estado": "Activo" }
+]
