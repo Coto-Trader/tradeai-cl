@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Índices · Suite TradeAI</title>
+<meta name="description" content="Índices de mercado (USD/CLP Observado, UF, TPM) que alimentan la Suite TradeAI. Fuente de datos única.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--signal:#2fd9e8;--signal-hi:#8ceff6;--bg:#0a0e14;--p1:#0e141d;--p2:#121a24;
+  --text:#e6ecf2;--dim:#9fb0bf;--muted:#56616f;--bd:#22303f;--up:#34d399;--warn:#fbbf24;
+  --disp:"Archivo",system-ui,sans-serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark;}
+*{box-sizing:border-box;margin:0}body{background:var(--bg);color:var(--text);font-family:var(--sans);
+  background-image:radial-gradient(1100px 560px at 82% -10%,rgba(47,217,232,.09),transparent 62%);min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:clamp(18px,4vw,44px)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--signal)}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(1.8rem,5vw,2.6rem);letter-spacing:-.02em;margin:.5rem 0 .3rem}
+h1 .acc{color:var(--signal)}
+.sub{color:var(--dim);font-family:var(--mono);font-size:.82rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:26px}
+.card{background:var(--p1);border:1px solid var(--bd);border-radius:12px;padding:18px 18px 20px;position:relative}
+.card .k{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.card .v{font-family:var(--disp);font-weight:800;font-size:clamp(1.8rem,4vw,2.4rem);margin-top:6px}
+.card .v.sig{color:var(--signal)}
+.card .u{font-family:var(--mono);font-size:.7rem;color:var(--dim);margin-top:4px}
+.card.big{grid-column:span 1;border-color:var(--signal-deep,#1f9dac)}
+.bar{display:flex;align-items:center;gap:10px;margin-top:28px;font-family:var(--mono);font-size:.74rem;color:var(--muted);flex-wrap:wrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up)}
+.note{font-family:var(--mono);font-size:.74rem;color:var(--muted);border:1px dashed var(--bd);border-radius:8px;padding:11px 13px;line-height:1.6;margin-top:22px}
+.note b{color:var(--text)}
+a{color:var(--signal)}
+.back{font-family:var(--mono);font-size:.74rem;color:var(--dim);text-decoration:none}
+.err{color:var(--warn)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/">← Suite TradeAI</a>
+  <div style="margin-top:18px">
+    <div class="eyebrow">Fuente de datos de la suite</div>
+    <h1>Índices <span class="acc">de mercado</span></h1>
+    <div class="sub">USD/CLP Observado · UF · TPM — alimentan todos los módulos de TradeAI.</div>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="card"><div class="k">Cargando…</div></div>
+  </div>
+
+  <div class="bar"><span class="dot" id="dot"></span><span id="status">Conectando a la fuente…</span></div>
+
+  <div class="note">
+    <b>Fuente actual:</b> Banco Central de Chile vía <a href="https://mindicador.cl" target="_blank" rel="noopener">mindicador.cl</a> (Observado, UF, TPM — valor diario oficial). ·
+    <b>USD/CLP intradía:</b> en esta etapa se usa el Observado del día como base y el "tiempo real" se simula alrededor; se conectará un feed de pago (TradingView/Bloomberg) cuando haya clientes. ·
+    Los módulos leen de aquí, así cambia en un solo lugar.
+  </div>
+</div>
+
+<script>
+var SRC = "https://mindicador.cl/api";
+function nf(n,d){try{return Number(n).toLocaleString("es-CL",{minimumFractionDigits:d,maximumFractionDigits:d});}catch(e){return n;}}
+function card(k,v,u,sig){return '<div class="card"><div class="k">'+k+'</div><div class="v'+(sig?' sig':'')+'">'+v+'</div><div class="u">'+u+'</div></div>';}
+function load(){
+  fetch(SRC).then(function(r){return r.json();}).then(function(d){
+    var g="";
+    g+=card("USD/CLP Observado","$"+nf(d.dolar.valor,1),"Dólar observado · "+d.dolar.fecha.slice(0,10),true);
+    g+=card("UF","$"+nf(d.uf.valor,2),"Unidad de fomento · "+d.uf.fecha.slice(0,10),false);
+    g+=card("TPM",nf(d.tpm.valor,2)+"%","Tasa de política monetaria",false);
+    g+=card("Euro/CLP","$"+nf(d.euro.valor,1),"Euro · "+d.euro.fecha.slice(0,10),false);
+    g+=card("UTM","$"+nf(d.utm.valor,0),"Unidad tributaria mensual",false);
+    document.getElementById("grid").innerHTML=g;
+    document.getElementById("status").textContent="En vivo · actualizado "+new Date().toLocaleString("es-CL")+" · fecha dato "+d.fecha.slice(0,10);
+  }).catch(function(e){
+    document.getElementById("status").innerHTML='<span class="err">No se pudo conectar a la fuente. Reintentando…</span>';
+  });
+}
+load();
+setInterval(load, 5*60*1000);
+</script>
+</body>
+</html>
